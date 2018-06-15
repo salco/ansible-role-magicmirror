@@ -4,7 +4,19 @@ Ansible role for installing and configuring MagicMirror
 
 ## Requirements
 
+### Control Machine Requirements
 * Ansible >= 2.2
+
+### Target Host Requirements
+These packages are required on the target host and are by default listed in the `magicmirror_apt_packages` variable and there is a task to install them already. They are listed here for completeness, there is no manual installation needed.
+
+* curl
+* wget
+* git
+* build-essential
+* unzip
+* unclutter
+* x11-xserver-utils
 
 ## Role Variables
 
