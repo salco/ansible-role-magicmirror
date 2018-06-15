@@ -1,0 +1,193 @@
+---
+- name: Install dependent packages
+  become: yes
+  apt:
+    name: "{{ magicmirror_apt_packages }}"
+    state: present
+  when: magicmirror_apt_packages is defined
+
+- name: Create {{ magicmirror_src_dir }} directory
+  file:
+    path: "{{ magicmirror_src_dir }}"
+    state: directory
+
+- name: Create {{ magicmirror_src_dir }}/pm2 directory
+  file:
+    path: "{{ magicmirror_src_dir }}/MagicMirror_pm2"
+    state: directory
+
+- name: Check nodejs version
+  shell: echo `nodejs -v` "{{ magicmirror_min_nodejs_version }}" | tr " " "\n" | sort -V | head -n 1
+  register: nodejs_version
+  changed_when: false
+
+- name: Check if nodejs upgrade required
+  set_fact: magicmirror_nodejs_upgrade_needed=yes
+  when: nodejs_version.stdout is defined and nodejs_version.stdout != magicmirror_min_nodejs_version
+
+- name: Upgrade nodejs
+  block:
+    - name: Check if any nodejs processes are running
+      shell: pgrep nodejs > /dev/null 2>&1
+      register: pgrep_nodejs
+      failed_when: pgrep_nodejs.rc >= 2
+      changed_when: false
+
+    - name: Stop all nodejs processes
+      command: killall nodejs -q
+      args:
+        warn: false
+      when: pgrep_nodejs.rc == 0
+
+    - name: Setup nodejs apt repository
+      shell: curl -sL https://deb.nodesource.com/setup_{{ magicmirror_nodejs_stable_branch }} | bash -
+      args:
+        creates: /etc/apt/sources.list.d/nodesource.list
+      register: apt_repository
+
+    - name: Upgrade nodejs package
+      apt:
+        name: nodejs
+        state: latest
+
+  when: magicmirror_nodejs_upgrade_needed
+  become: yes
+
+- name: Clone MagicMirror repository
+  git:
+    repo: https://github.com/MichMich/MagicMirror.git
+    dest: "{{ magicmirror_src_dir }}/MagicMirror"
+    depth: 1
+    update: no
+    ssh_opts: -o StrictHostKeyChecking=no
+    accept_hostkey: yes
+  register: magicmirror_git
+
+- name: Install MagicMirror npm dependencies
+  command: npm install
+  args:
+    chdir: "{{ magicmirror_src_dir }}/MagicMirror"
+    warn: false
+  async: 1200
+  poll: 5
+  when: magicmirror_git.changed
+
+- name: Install MagicMirror config.js
+  template: src=config.js.j2 dest="{{ magicmirror_src_dir }}/MagicMirror/config/config.js"
+  notify: restart mm
+
+- name: Tasks requiring account escalation
+  block:
+    - name: Verify plymouth theme directory exists
+      file:
+        path: "{{ magicmirror_plymouth_theme_dir }}"
+        state: directory
+
+    - name: Check if plymouth theme installed
+      stat:
+        path: "{{ magicmirror_plymouth_theme_dir }}/MagicMirror.plymouth"
+      register: plymouth_stat
+
+    - name: Install plymouth theme
+      command: cp -n {{ magicmirror_src_dir }}/MagicMirror/splashscreen/{{ item }} {{ magicmirror_plymouth_theme_dir }}/
+      args:
+        warn: false
+      loop:
+        - splash.png
+        - MagicMirror.plymouth
+        - MagicMirror.script
+      register: plymouth_theme
+      when: plymouth_stat.stat is defined and plymouth_stat.stat.exists == false
+
+    - name: Change plymouth default theme to MagicMirror
+      command: plymouth-set-default-theme -R MagicMirror
+      args:
+        warn: false
+      when: plymouth_theme.changed
+
+    - name: Install pm2 node.js package globally
+      npm:
+        name: pm2
+        global: yes
+        state: present
+      register: pm2_install
+
+    - name: Configure pm2 startup
+      command: /usr/lib/node_modules/pm2/bin/pm2 startup -u {{ magicmirror_pm2_user }} --hp /home/{{ magicmirror_pm2_user }}
+      # systemd
+      args:
+        warn: false
+      when: pm2_install.changed
+
+    - name: Change autologin user to {{ magicmirror_pm2_user }} account
+      lineinfile:
+        path: "/etc/systemd/system/autologin@.service"
+        regexp: "ExecStart=-/sbin/agetty --autologin (?!{{ magicmirror_pm2_user }}\\s).* --noclear %I \\$TERM"
+        line: "ExecStart=-/sbin/agetty --autologin {{ magicmirror_pm2_user }} --noclear %I $TERM"
+        backrefs: yes
+        state: present
+      notify: reboot no wait
+
+    - name: Set lightdm autologin user to {{ magicmirror_pm2_user }} account
+      lineinfile:
+        path: /etc/lightdm/lightdm.conf
+        regexp: "autologin-user=(?!{{ magicmirror_pm2_user }}$)"
+        line: "autologin-user={{ magicmirror_pm2_user }}"
+        backrefs: yes
+        state: present
+      notify: reboot no wait
+
+    - name: Disable lightdm screen saver
+      lineinfile:
+        path: /etc/lightdm/lightdm.conf
+        line: 'xserver-command=X -s 0 -dpms'
+        insertafter: '[Seat:*]'
+        state: present
+      notify: reboot no wait
+
+    - name: Enable OpenGL driver
+      lineinfile:
+        path: /boot/config.txt
+        line: 'dtoverlay=vc4-kms-v3d'
+        state: present
+      notify: reboot no wait
+
+  become: yes
+
+- name: Setup autohiding mouse
+  lineinfile:
+    path: /home/{{ magicmirror_pm2_user }}/.config/lxsession/LXDE-pi/autostart
+    line: '@unclutter -display :0 -idle 3 -root -noevents'
+    state: present
+  notify: reboot no wait
+
+- name: Disable screen saver
+  lineinfile:
+    path: /home/{{ magicmirror_pm2_user }}/.config/lxsession/LXDE-pi/autostart
+    line: "{{ item }}"
+    state: present
+  loop:
+    - '@xset s noblank'
+    - '@xset s off'
+    - '@xset -dpms'
+  notify: reboot no wait
+
+- name: Install pm2 control files
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ magicmirror_src_dir }}/MagicMirror_pm2/{{ item.dest }}"
+  loop:
+    - { src: pm2_MagicMirror.json.j2, dest: pm2_MagicMirror.json }
+    - { src: mm.sh.j2, dest: mm.sh }
+  register: pm2_control
+
+- name: Set pm2 auto startup of MagicMirror
+  command: "{{ item }}"
+  args:
+    warn: false
+  register: command_result
+  failed_when: "'[ERROR]' in command_result.stderr"
+  loop:
+    - pm2 startOrRestart {{ magicmirror_src_dir }}/MagicMirror_pm2/pm2_MagicMirror.json
+    - pm2 save
+  when: pm2_control.changed

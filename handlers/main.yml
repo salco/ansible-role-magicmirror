@@ -1,0 +1,10 @@
+---
+- name: Restart MagicMirror
+  listen: "restart mm"
+  command: pm2 restart MagicMirror
+
+- name: reboot no wait
+  become: yes
+  shell: "sleep 1 && shutdown -r now +1"
+  async: 1
+  poll: 0

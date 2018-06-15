@@ -1,0 +1,31 @@
+---
+galaxy_info:
+  author: Matthtew C. Veno
+  description: Ansible role for installing and configuring MagicMirror
+  issue_tracker_url: https://gitlab.com/flyingchipmunk_ansible/magicmirror/issues
+
+  license: MIT
+
+  min_ansible_version: 2.2
+
+  #github_branch: master
+
+  #
+  # platforms is a list of platforms, and each platform has a name and a list of versions.
+  #
+  # platforms:
+  # - name: Fedora
+  #   versions:
+  #   - all
+  #   - 25
+  # - name: SomePlatform
+  #   versions:
+  #   - all
+  #   - 1.0
+  #   - 7
+  #   - 99.99
+
+  galaxy_tags:
+    - magicmirror
+
+dependencies: []

@@ -1,0 +1,57 @@
+---
+# Dependent apt packages
+magicmirror_apt_packages:
+  - curl
+  - wget
+  - git
+  - build-essential
+  - unzip
+  - unclutter
+  - x11-xserver-utils
+
+# User account to use pm2 with
+magicmirror_pm2_user: pi
+
+# Parent directory to checkout MagicMirror repository
+magicmirror_src_dir: /home/{{ magicmirror_pm2_user }}/src
+
+# Minimal nodejs version string
+magicmirror_min_nodejs_version: v5.1.0
+
+# Stable branch name for nodejs installer
+magicmirror_nodejs_stable_branch: 9.x
+
+# Used internally in role to set whether nodejs needs to be upgraded
+magicmirror_nodejs_upgrade_needed: no
+
+# Path to plymouth themes directory for MagicMirror
+magicmirror_plymouth_theme_dir: /usr/share/plymouth/themes/MagicMirror
+
+# 12 or 24 hr time format
+magicmirror_timeformat: 12
+
+# imperial or metric units
+magicmirror_units: imperial
+
+# Default timezone
+magicmirror_timezone: America/New_York
+
+# API key from http://www.openweathermap.org
+magicmirror_weather_api_key:
+
+# Header for calendar module
+magicmirror_calendar_header: US Holidays
+
+# Calendar module 'location' value
+magicmirror_weather_location: Boston
+
+# ID from http://www.openweathermap.org/help/city_list.txt
+magicmirror_weather_locationid:
+
+# List of newsfeeds
+magicmirror_newsfeeds:
+    - { title: New York Times, url: "http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml" }
+
+# List of calendars
+magicmirror_calendars:
+    - { symbol: "calendar-check-o ", url: "webcal://www.calendarlabs.com/templates/ical/US-Holidays.ics" }
