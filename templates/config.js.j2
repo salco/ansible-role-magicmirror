@@ -54,6 +54,14 @@ var config = {
             }
         },
         {
+            module: "compliments",
+            disabled: true,
+            position: "lower_third",
+            config: {
+                remoteFile: "{{ magicmirror_compliments_file }}"
+            }
+        },
+        {
             module: "currentweather",
             position: "top_right",
             config: {
@@ -61,7 +69,7 @@ var config = {
                 locationID: "{{ magicmirror_weather_locationid }}",  //ID from http://www.openweathermap.org/help/city_list.txt
                 appid: "{{ magicmirror_weather_api_key }}",
                 degreeLabel: true,
-                showHumidity: true
+                showHumidity: false
             }
         },
         {

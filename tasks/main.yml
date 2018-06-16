@@ -72,8 +72,32 @@
   poll: 5
   when: magicmirror_git.changed
 
-- name: Install MagicMirror config.js
-  template: src=config.js.j2 dest="{{ magicmirror_src_dir }}/MagicMirror/config/config.js"
+- name: Clone 3rd party modules
+  git:
+    repo: "{{ item.url }}"
+    dest: "{{ magicmirror_src_dir }}/MagicMirror/modules/{{ item.name }}"
+    update: yes
+    ssh_opts: -o StrictHostKeyChecking=no
+    accept_hostkey: yes
+  loop: "{{ magicmirror_extra_modules }}"
+  loop_control:
+    label: "{{ item.name }}"
+  register: third_party_modules
+
+- name: Run npm install for 3rd party modules
+  command: npm install
+  args:
+    chdir: "{{ item.invocation.module_args.dest }}"
+  loop: "{{ third_party_modules.results }}"
+  loop_control:
+    label: "{{ item.item.name }}"
+  when: item.changed and item.item.npm_install
+
+- name: Install MagicMirror config files
+  template: src="{{ item.src }}" dest="{{ magicmirror_src_dir }}/MagicMirror/config/{{ item.dest }}"
+  loop:
+    - { src: config.js.j2, dest: config.js }
+    - { src: compliments.json.j2, dest: compliments.json }
   notify: restart mm
 
 - name: Tasks requiring account escalation

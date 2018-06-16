@@ -55,3 +55,10 @@ magicmirror_newsfeeds:
 # List of calendars
 magicmirror_calendars:
     - { symbol: "calendar-check-o ", url: "webcal://www.calendarlabs.com/templates/ical/US-Holidays.ics" }
+
+# External json file for compliments module
+magicmirror_compliments_file:
+
+# List of third party modules clone url's, example syntax
+#   - { name: MMM-connection-status, npm_install: yes, url: 'https://github.com/sheyabernstein/MMM-connection-status.git' }
+magicmirror_extra_modules:
