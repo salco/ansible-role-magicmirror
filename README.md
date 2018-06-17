@@ -136,6 +136,14 @@ Whether to add watchdog module in config
 
     magicmirror_watchdog_enabled: true
 
+Whether to add systemstats module in config
+
+    magicmirror_systemstats_enabled: true
+
+Update Interval in ms, defaults to 10s
+
+    magicmirror_systemstats_updateinterval: 10000
+
 Whether to add MyCommute module in config
 
     magicmirror_mycommute_enabled: false
