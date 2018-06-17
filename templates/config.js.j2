@@ -50,7 +50,8 @@ var config = {
                         url: "{{ item.url }}"
                     },
                     {% endfor %}
-                ]
+                ],
+                excludedEvents: ['kateri']
             }
         },
         {
@@ -82,6 +83,21 @@ var config = {
                 appid: "{{ magicmirror_weather_api_key }}"
             }
         },
+        {% if magicmirror_alexa_enabled %}
+        {
+            module: "MMM-awesome-alexa",
+            position: "bottom_bar",
+            config: {
+                wakeWord: "{{ magicmirror_alexa_wakeword }}",
+                clientId: "{{ magicmirror_alexa_clientid }}",
+                clientSecret: "{{ magicmirror_alexa_clientsecret }}",
+                deviceId: "{{ magicmirror_alexa_deviceid }}",
+                refreshToken: "{{ magicmirror_alexa_refreshtoken }}",
+                lite: false,
+                isSpeechVisualizationEnabled: true
+            }
+        },
+        {% endif %}
         {
             module: "newsfeed",
             position: "bottom_bar",

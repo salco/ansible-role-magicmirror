@@ -132,6 +132,31 @@ List of third party modules clone url's, example syntax
 ```
     magicmirror_extra_modules:
 
+Whether to config alexa module in config
+
+    magicmirror_alexa_enabled: false
+
+Alexa AVS client id
+
+    magicmirror_alexa_clientid:
+
+Alexa AVS client secret
+
+    magicmirror_alexa_clientsecret:
+
+Alexa AVS device id
+
+    magicmirror_alexa_deviceid:
+
+Alexa AVS refresh token
+
+    magicmirror_alexa_refreshtoken:
+
+Alexa AVS wake word
+
+    magicmirror_alexa_wakeword: Smart Mirror
+
+
 
 ## Dependencies
 
