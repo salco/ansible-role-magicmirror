@@ -27,7 +27,7 @@ var config = {
 
     modules: [
         {
-            module: "alert",
+            module: "alert"
         },
         {
             module: "updatenotification",
@@ -43,17 +43,27 @@ var config = {
             header: "{{ magicmirror_calendar_header }}",
             position: "top_left",
             config: {
-                calendars: [
-                    {% for item in magicmirror_calendars %}
-                    {
-                        symbol: "{{ item.symbol }}",
-                        url: "{{ item.url }}"
-                    },
-                    {% endfor %}
-                ],
-                excludedEvents: ['kateri']
+                calendars: {{ magicmirror_calendars | to_nice_json }}
             }
         },
+        {% if magicmirror_mycommute_enabled %}
+        {
+            module: 'MMM-MyCommute',
+            position: 'bottom_left',
+            header: "{{ magicmirror_mycommute_header }}",
+            classes: 'default everyone',
+            config: {
+                apikey: "{{ magicmirror_mycommute_api_key }}",
+                origin: "{{ magicmirror_mycommute_origin }}",
+                startTime: "{{ magicmirror_mycommute_starttime }}",
+                endTime: "{{ magicmirror_mycommute_endtime }}",
+                hideDays: {{ magicmirror_mycommute_hidedays | default('[]', true) }},
+                travelTimeFormat: "{{ magicmirror_mycommute_traveltimeformat }}",
+                pollFrequency: "{{ magicmirror_mycommute_pollfrequency }}",
+                destinations: {{ magicmirror_mycommute_destinations | to_nice_json }}
+            }
+        },
+        {% endif %}
         {
             module: "compliments",
             disabled: true,

@@ -81,6 +81,36 @@ magicmirror_compliments_file:
 #     extra_cmd:
 magicmirror_extra_modules:
 
+# Whether to config MyCommute module in config
+magicmirror_mycommute_enabled: false
+
+# Header for mycommute module
+magicmirror_mycommute_header: Traffic
+
+# Google API key, https://developers.google.com/maps/documentation/javascript/get-api-key
+magicmirror_mycommute_api_key:
+
+# Starting address (home)
+magicmirror_mycommute_origin:
+
+# Start time when module will be visible (24-hr format, defaults to midnight)
+magicmirror_mycommute_starttime: '00:00'
+
+# End time when module will be visible (24hr format, defaults to one minute before midnight)
+magicmirror_mycommute_endtime: '23:59'
+
+# Array of days to hide module. Valid numbers are 0 through 6, 0 = Sunday, 6 = Saturday.
+magicmirror_mycommute_hidedays:
+
+# Format of total travel time
+magicmirror_mycommute_traveltimeformat: m [min]
+
+# How often to poll for traffic updates in milliseconds. Defaults to 10 minutes (10 * 60 * 1000)
+magicmirror_mycommute_pollfrequency: 600000
+
+# Array of destinations
+magicmirror_mycommute_destinations:
+
 # Whether to config alexa module in config
 magicmirror_alexa_enabled: false
 
