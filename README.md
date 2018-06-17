@@ -31,6 +31,14 @@ Dependent apt packages that will be installed (default list)
         - unclutter
         - x11-xserver-utils
 
+Audio output device, valid options are -  0: Automatic, 1: Analogue (headphone jack), 2: HDMI
+
+    magicmirror_audio_output_device: 0
+
+Audio capture device
+
+    magicmirror_audio_capture_device: 'hw:1,0'
+
 User account to use pm2 with
 
     magicmirror_pm2_user: pi

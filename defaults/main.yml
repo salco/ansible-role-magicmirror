@@ -9,6 +9,12 @@ magicmirror_apt_packages:
   - unclutter
   - x11-xserver-utils
 
+# Audio output device, options- 0:automatic 2:hdmi 1:analogue (headphone jack)
+magicmirror_audio_output_device: 0
+
+# Audio capture device
+magicmirror_audio_capture_device: 'hw:1,0'
+
 # User account to use pm2 with
 magicmirror_pm2_user: pi
 

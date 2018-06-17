@@ -94,10 +94,10 @@
   when: item.changed and item.item.npm_install
 
 - name: Install MagicMirror config files
-  template: src="{{ item.src }}" dest="{{ magicmirror_src_dir }}/MagicMirror/config/{{ item.dest }}"
+  template: src="{{ item.src }}" dest="{{ magicmirror_src_dir }}/MagicMirror/{{ item.dest }}"
   loop:
-    - { src: config.js.j2, dest: config.js }
-    - { src: compliments.json.j2, dest: compliments.json }
+    - { src: config.js.j2, dest: config/config.js }
+    - { src: compliments.json.j2, dest: modules/default/compliments/compliments.json }
   notify: restart mm
 
 - name: Tasks requiring account escalation
@@ -176,7 +176,27 @@
         state: present
       notify: reboot no wait
 
+    - name: Fix permissions for audio output
+      file:
+        path: /dev/vchiq
+        mode: 0777
+
+    - name: Check current sound output device
+      command: 'amixer cget numid=3'
+      changed_when: false
+      register: device_output
+
+    - name: Enable Headphone jack sound output
+      command: "amixer cset numid=3 {{ magicmirror_audio_output_device }}"
+      when: device_output.stdout is not search("values=" ~ magicmirror_audio_output_device ~ ",")
+
+    - name: Set global default audio input device
+      template: src=asoundrc.j2 dest=/etc/asound.conf
+
   become: yes
+
+- name: Set user default audio input device
+  template: src=asoundrc.j2 dest=/home/{{ magicmirror_pm2_user }}/.asoundrc
 
 - name: Setup autohiding mouse
   lineinfile:
