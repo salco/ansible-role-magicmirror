@@ -77,12 +77,14 @@
     repo: "{{ item.url }}"
     dest: "{{ magicmirror_src_dir }}/MagicMirror/modules/{{ item.name }}"
     update: yes
+    force: yes
     ssh_opts: -o StrictHostKeyChecking=no
     accept_hostkey: yes
   loop: "{{ magicmirror_extra_modules }}"
   loop_control:
     label: "{{ item.name }}"
   register: third_party_modules
+  notify: restart mm
 
 - name: Run npm install for 3rd party modules
   command: 'npm install --only=prod'
@@ -184,11 +186,6 @@
         line: 'dtoverlay=vc4-kms-v3d'
         state: present
       notify: reboot no wait
-
-    - name: Fix permissions for audio output
-      file:
-        path: /dev/vchiq
-        mode: 0777
 
     - name: Check current sound output device
       command: 'amixer cget numid=3'

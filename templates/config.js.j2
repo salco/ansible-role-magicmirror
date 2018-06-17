@@ -33,6 +33,15 @@ var config = {
             module: "updatenotification",
             position: "top_bar"
         },
+        {% if magicmirror_watchdog_enabled %}
+        {
+            module: 'MMM-WatchDog',
+            config: {
+                interval: 2,
+                timeout: 10
+            }
+        },
+        {% endif %}
         {
             module: "clock",
             position: "top_left",
@@ -93,6 +102,20 @@ var config = {
                 appid: "{{ magicmirror_weather_api_key }}"
             }
         },
+        {% if magicmirror_systemstats_enabled %}
+        {
+            module: 'MMM-SystemStats',
+            position: 'bottom_right',
+            classes: 'small dimmed',
+            header: "{{ magicmirror_systemstats_header }}",
+            config: {
+                updateInterval: {{ magicmirror_systemstats_updateinterval }},
+                animationSpeed: 0,
+                align: 'right', // align labels
+                thresholdCPUTemp: 167
+            },
+        },
+        {% endif %}
         {% if magicmirror_alexa_enabled %}
         {
             module: "MMM-awesome-alexa",
