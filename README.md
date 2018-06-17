@@ -17,6 +17,12 @@ These packages are required on the target host and are by default listed in the 
 * unzip
 * unclutter
 * x11-xserver-utils
+* sox
+* libsox-fmt-all
+* swig3.0
+* python-pyaudio
+* python3-pyaudio
+* libatlas-base-dev
 
 ## Role Variables
 
@@ -30,6 +36,14 @@ Dependent apt packages that will be installed (default list)
         - unzip
         - unclutter
         - x11-xserver-utils
+        # alexa related
+        - sox
+        - libsox-fmt-all
+        - swig3.0
+        - python-pyaudio
+        - python3-pyaudio
+        - libatlas-base-dev
+        # end alexa related
 
 Audio output device, valid options are -  0: Automatic, 1: Analogue (headphone jack), 2: HDMI
 
@@ -100,6 +114,20 @@ List of calendars
 
     magicmirror_calendars:
     - { symbol: "calendar-check-o ", url: "webcal://www.calendarlabs.com/templates/ical/US-Holidays.ics" }
+
+External json file for compliments module
+
+    magicmirror_compliments_file:
+
+List of third party modules clone url's, example syntax
+
+```
+  - name: MMM-connection-status
+    url: 'https://github.com/sheyabernstein/MMM-connection-status.git'
+    npm_install: yes
+    extra_cmd:
+```
+    magicmirror_extra_modules:
 
 
 ## Dependencies

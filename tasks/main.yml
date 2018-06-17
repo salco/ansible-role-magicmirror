@@ -85,13 +85,22 @@
   register: third_party_modules
 
 - name: Run npm install for 3rd party modules
-  command: npm install
+  command: 'npm install --only=prod'
   args:
     chdir: "{{ item.invocation.module_args.dest }}"
   loop: "{{ third_party_modules.results }}"
   loop_control:
     label: "{{ item.item.name }}"
   when: item.changed and item.item.npm_install
+
+- name: Run extra commands for 3rd party modules
+  command: "{{ item.item.extra_cmd }}"
+  args:
+    chdir: "{{ item.invocation.module_args.dest }}"
+  loop: "{{ third_party_modules.results }}"
+  loop_control:
+    label: "{{ item.item.name }}"
+  when: item.changed and item.item.extra_cmd is defined and item.item.extra_cmd != ""
 
 - name: Install MagicMirror config files
   template: src="{{ item.src }}" dest="{{ magicmirror_src_dir }}/MagicMirror/{{ item.dest }}"
@@ -188,10 +197,15 @@
 
     - name: Enable Headphone jack sound output
       command: "amixer cset numid=3 {{ magicmirror_audio_output_device }}"
-      when: device_output.stdout is not search("values=" ~ magicmirror_audio_output_device ~ ",")
+      when: device_output.stdout is defined and device_output.stdout is not search("values=" ~ magicmirror_audio_output_device ~ ",")
 
     - name: Set global default audio input device
       template: src=asoundrc.j2 dest=/etc/asound.conf
+
+    - name: Install pip module pyaudio
+      pip:
+        name: pyaudio
+        state: present
 
   become: yes
 
