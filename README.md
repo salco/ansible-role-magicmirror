@@ -24,6 +24,9 @@ These packages are required on the target host and are by default listed in the 
 * python3-pyaudio
 * libatlas-base-dev
 
+pip modules required. They are listed here for completeness, there is no manual installation needed.
+ * pyaudio
+
 ## Role Variables
 
 Dependent apt packages that will be installed (default list)
