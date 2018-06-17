@@ -107,11 +107,12 @@ var config = {
             module: 'MMM-SystemStats',
             position: 'bottom_right',
             classes: 'small dimmed',
+            header: "{{ magicmirror_systemstats_header }}",
             config: {
                 updateInterval: {{ magicmirror_systemstats_updateinterval }},
                 animationSpeed: 0,
                 align: 'right', // align labels
-                //header: 'System Stats'
+                thresholdCPUTemp: 167
             },
         },
         {% endif %}

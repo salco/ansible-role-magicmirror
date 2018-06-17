@@ -140,6 +140,10 @@ Whether to add systemstats module in config
 
     magicmirror_systemstats_enabled: true
 
+Header for SystemStats module
+
+    magicmirror_systemstats_header: System Stats
+
 Update Interval in ms, defaults to 10s
 
     magicmirror_systemstats_updateinterval: 10000
