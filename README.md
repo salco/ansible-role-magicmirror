@@ -113,6 +113,10 @@ List of newsfeeds
     magicmirror_newsfeeds:
     - { title: New York Times, url: "http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml" }
 
+Hide private events
+
+    magicmirror_calendar_hideprivate: false
+
 List of calendars
 
     magicmirror_calendars:

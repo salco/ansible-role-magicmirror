@@ -52,6 +52,7 @@ var config = {
             header: "{{ magicmirror_calendar_header }}",
             position: "top_left",
             config: {
+                hidePrivate: "{{ magicmirror_calendar_hideprivate }}",
                 calendars: {{ magicmirror_calendars | to_nice_json }}
             }
         },
