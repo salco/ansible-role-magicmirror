@@ -38,7 +38,8 @@ var config = {
             module: 'MMM-WatchDog',
             config: {
                 interval: 2,
-                timeout: 10
+                timeout: 10,
+                pm2_app: "{{ magicmirror_watchdog_pm2_app }}"
             }
         },
 {% endif %}

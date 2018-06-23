@@ -140,6 +140,10 @@ Whether to add watchdog module in config
 
     magicmirror_watchdog_enabled: true
 
+Name of pm2 app to restart on failure
+
+    magicmirror_watchdog_pm2_app: 'MagicMirror'
+
 Whether to add systemstats module in config
 
     magicmirror_systemstats_enabled: true
