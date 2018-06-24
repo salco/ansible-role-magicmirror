@@ -66,6 +66,9 @@ magicmirror_weather_locationid:
 magicmirror_newsfeeds:
     - { title: New York Times, url: "http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml" }
 
+# Hide private events
+magicmirror_calendar_hideprivate: false
+
 # List of calendars
 magicmirror_calendars:
     - { symbol: "calendar-check-o ", url: "webcal://www.calendarlabs.com/templates/ical/US-Holidays.ics" }
@@ -83,6 +86,9 @@ magicmirror_extra_modules:
 
 # Whether to add watchdog module in config
 magicmirror_watchdog_enabled: true
+
+# Name of pm2 app to restart on failure
+magicmirror_watchdog_pm2_app: 'MagicMirror'
 
 # Whether to add systemstats module in config
 magicmirror_systemstats_enabled: true
@@ -140,3 +146,15 @@ magicmirror_alexa_refreshtoken:
 
 # Alexa AVS wake word
 magicmirror_alexa_wakeword: Smart Mirror
+
+# Whether to add the PIR sensor module in config
+magicmirror_pirsensor_enabled: false
+
+# BCM pin number sensor's digital out is connected to
+magicmirror_pirsensor_pin: 22
+
+# Turn off HDMI port when no motion?
+magicmirror_pirsensor_powersaving: true
+
+# Delay befor turning off HDMI port in seconds
+magicmirror_pirsensor_powersaving_delay: 10

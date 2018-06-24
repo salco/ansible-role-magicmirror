@@ -76,6 +76,7 @@
   git:
     repo: "{{ item.url }}"
     dest: "{{ magicmirror_src_dir }}/MagicMirror/modules/{{ item.name }}"
+    version: "{{ item.version | default('HEAD', true) }}"
     update: yes
     force: yes
     ssh_opts: -o StrictHostKeyChecking=no
@@ -148,8 +149,7 @@
       register: pm2_install
 
     - name: Configure pm2 startup
-      command: /usr/lib/node_modules/pm2/bin/pm2 startup -u {{ magicmirror_pm2_user }} --hp /home/{{ magicmirror_pm2_user }}
-      # systemd
+      command: /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u {{ magicmirror_pm2_user }} --hp /home/{{ magicmirror_pm2_user }}
       args:
         warn: false
       when: pm2_install.changed

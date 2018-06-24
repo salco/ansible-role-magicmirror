@@ -33,15 +33,26 @@ var config = {
             module: "updatenotification",
             position: "top_bar"
         },
-        {% if magicmirror_watchdog_enabled %}
+{% if magicmirror_watchdog_enabled %}
         {
             module: 'MMM-WatchDog',
             config: {
                 interval: 2,
-                timeout: 10
+                timeout: 10,
+                pm2_app: "{{ magicmirror_watchdog_pm2_app }}"
             }
         },
-        {% endif %}
+{% endif %}
+{% if magicmirror_pirsensor_enabled %}
+        {
+            module: 'MMM-PIR-Sensor',
+            config: {
+                sensorPIN: {{ magicmirror_pirsensor_pin }},
+                powerSaving: "{{ magicmirror_pirsensor_powersaving }}",
+                powerSavingDelay: {{ magicmirror_pirsensor_powersaving_delay | default(0, true) }},
+            }
+        },
+{% endif %}
         {
             module: "clock",
             position: "top_left",
@@ -52,10 +63,11 @@ var config = {
             header: "{{ magicmirror_calendar_header }}",
             position: "top_left",
             config: {
+                hidePrivate: "{{ magicmirror_calendar_hideprivate }}",
                 calendars: {{ magicmirror_calendars | to_nice_json }}
             }
         },
-        {% if magicmirror_mycommute_enabled %}
+{% if magicmirror_mycommute_enabled %}
         {
             module: 'MMM-MyCommute',
             position: 'bottom_left',
@@ -72,7 +84,7 @@ var config = {
                 destinations: {{ magicmirror_mycommute_destinations | to_nice_json }}
             }
         },
-        {% endif %}
+{% endif %}
         {
             module: "compliments",
             disabled: true,
@@ -102,7 +114,7 @@ var config = {
                 appid: "{{ magicmirror_weather_api_key }}"
             }
         },
-        {% if magicmirror_systemstats_enabled %}
+{% if magicmirror_systemstats_enabled %}
         {
             module: 'MMM-SystemStats',
             position: 'bottom_right',
@@ -115,8 +127,8 @@ var config = {
                 thresholdCPUTemp: 167
             },
         },
-        {% endif %}
-        {% if magicmirror_alexa_enabled %}
+{% endif %}
+{% if magicmirror_alexa_enabled %}
         {
             module: "MMM-awesome-alexa",
             position: "bottom_bar",
@@ -130,7 +142,7 @@ var config = {
                 isSpeechVisualizationEnabled: true
             }
         },
-        {% endif %}
+{% endif %}
         {
             module: "newsfeed",
             position: "bottom_bar",
