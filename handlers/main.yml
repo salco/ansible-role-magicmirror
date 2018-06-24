@@ -1,7 +1,7 @@
 ---
-- name: Restart MagicMirror
+- name: Restart {{ magicmirror_watchdog_pm2_app }}
   listen: "restart mm"
-  command: pm2 restart MagicMirror
+  command: pm2 restart {{ magicmirror_watchdog_pm2_app }}
 
 - name: reboot no wait
   become: yes
