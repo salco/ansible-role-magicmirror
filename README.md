@@ -262,5 +262,5 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 https://opensource.org/licenses/MIT
 
 ## Author Information
-
+Repo forked from https://gitlab.com/flyingchipmunk_ansible/magicmirror
 Matthew C. Veno
