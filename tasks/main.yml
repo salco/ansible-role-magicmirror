@@ -1,59 +1,64 @@
 ---
-- name: "prepare deployment"
-  import_tasks: setup-deployment.yml
-
-- name: "Setup modules"
-  import_tasks: setup-modules.yml
+#- name: "prepare deployment"
+#  import_tasks: setup-deployment.yml
+#
+#- name: "Setup modules"
+#  import_tasks: setup-modules.yml
 
 - name: Install MagicMirror config files
-  template: src="{{ item.src }}" dest="{{ magicmirror_src_dir }}/MagicMirror/{{ item.dest }}"
-  loop:
-    - { src: config.js.j2, dest: config/config.js }
-    - { src: compliments.json.j2, dest: modules/default/compliments/compliments.json }
-  notify: restart mm
-
-- name: "Configure plymouth boot animation"
-  import_tasks: configure-plymouth.yml
-
-//------- pm2 stuff
-  - name: Install pm2 node.js package globally
-    npm:
-      name: pm2
-      global: yes
-      state: present
-    register: pm2_install
-
-  - name: Configure pm2 startup
-    command: /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u {{ magicmirror_pm2_user }} --hp /home/{{ magicmirror_pm2_user }}
-    args:
-      warn: false
-    when: pm2_install.changed
-//-------
-
-- name: "Quality of life for magicmirror on the host linux"
-  import_tasks: configure-linux-host.yml
-
-- name: "Configure audio on the host linux"
-  import_tasks: configure-audio.yml
-
-//------- pm2 stuff
-- name: Install pm2 control files
   template:
     src: "{{ item.src }}"
-    dest: "{{ magicmirror_src_dir }}/MagicMirror_pm2/{{ item.dest }}"
+    dest: "{{ magicmirror_src_dir }}/{{ item.dest }}"
+    #/MagicMirror/{{ item.dest }}"
   loop:
-    - { src: pm2_MagicMirror.json.j2, dest: pm2_MagicMirror.json }
-    - { src: mm.sh.j2, dest: mm.sh }
-  register: pm2_control
+    #- { src: config.js.j2, dest: config/config.js }
+    - { src: config.js.j2, dest: config.js }
+#    - { src: compliments.json.j2, dest: modules/default/compliments/compliments.json }
+#  notify: restart mm
 
-- name: Set pm2 auto startup of MagicMirror
-  command: "{{ item }}"
-  args:
-    warn: false
-  register: command_result
-  failed_when: "'[ERROR]' in command_result.stderr"
-  loop:
-    - pm2 startOrRestart {{ magicmirror_src_dir }}/MagicMirror_pm2/pm2_MagicMirror.json
-    - pm2 save
-  when: pm2_control.changed
-//-------
+#- name: "Configure plymouth boot animation"
+#  import_tasks: configure-plymouth.yml
+#
+#//------- pm2 stuff
+#  - name: Install pm2 node.js package globally
+#    npm:
+#      name: pm2
+#      global: yes
+#      state: present
+#    register: pm2_install
+#
+#  - name: Configure pm2 startup
+#    command: /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u {{ magicmirror_pm2_user }} --hp /home/{{ magicmirror_pm2_user }}
+#    args:
+#      warn: false
+#    when: pm2_install.changed
+#//-------
+#
+#- name: "Quality of life for magicmirror on the host linux"
+#  import_tasks: configure-linux-host.yml
+#
+#- name: "Configure audio on the host linux"
+#  import_tasks: configure-audio.yml
+#
+#//------- pm2 stuff
+#- name: Install pm2 control files
+#  template:
+#    src: "{{ item.src }}"
+#    dest: "{{ magicmirror_src_dir }}/MagicMirror_pm2/{{ item.dest }}"
+#  loop:
+#    - { src: pm2_MagicMirror.json.j2, dest: pm2_MagicMirror.json }
+#    - { src: mm.sh.j2, dest: mm.sh }
+#  register: pm2_control
+#
+#- name: Set pm2 auto startup of MagicMirror
+#  command: "{{ item }}"
+#  args:
+#    warn: false
+#  register: command_result
+#  failed_when: "'[ERROR]' in command_result.stderr"
+#  loop:
+#    - pm2 startOrRestart {{ magicmirror_src_dir }}/MagicMirror_pm2/pm2_MagicMirror.json
+#    - pm2 save
+#  when: pm2_control.changed
+#//-------
+#

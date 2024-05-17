@@ -159,25 +159,26 @@ var config = {
                 showPublishDate: true
             }
         },
-        {% for modules in third_party_modules %}
-        {%   set _modules = third_party_modules[modules] %}
+        {%- for modules in magicmirror_extra_modules %}
+        {%-  set _modules = magicmirror_extra_modules[modules] %}
         {
             module: "{{ _modules['name'] }}",
-            {% if _modules['header'] is defined %}
+            {%- if _modules['header'] is defined %}
             header: "{{ _modules['header'] }}",
-            {% endif %}
+            {%- endif %}
 
-            {% if _modules['position'] is defined %}
+{% if _modules['position'] is defined %}
             position: "{{ _modules['position'] }}",
-            {% endif %}
+{% endif -%}
 
             {% if _modules['config'] is defined %}
             config: {
-              {{ _modules['config'] }} //TODO look if it need to be rework on config depth
+{{ _modules['config']|indent(8, true) }}
+              {#TODO look if it need to be rework on config depth#}
             },
-            {% endif %}
+            {%- endif %}
         },
-        {% endfor %}
+        {%- endfor %}
     ]
 
 };
