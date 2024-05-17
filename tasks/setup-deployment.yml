@@ -1,0 +1,90 @@
+---
+- name: Install dependent packages
+  become: yes
+  apt:
+    name: "{{ magicmirror_apt_packages }}"
+    state: present
+  when: magicmirror_apt_packages is defined
+
+- name: Create {{ magicmirror_src_dir }} directory
+  file:
+    path: "{{ magicmirror_src_dir }}"
+    state: directory
+
+- name: Create {{ magicmirror_src_dir }}/pm2 directory
+  file:
+    path: "{{ magicmirror_src_dir }}/MagicMirror_pm2"
+    state: directory
+
+- name: Check nodejs version
+  shell: echo `nodejs -v` "{{ magicmirror_min_nodejs_version }}" | tr " " "\n" | sort -V | head -n 1
+  register: nodejs_version
+  changed_when: false
+
+- name: Check if nodejs upgrade required
+  set_fact: magicmirror_nodejs_upgrade_needed=yes
+  when: nodejs_version.stdout is defined and nodejs_version.stdout != magicmirror_min_nodejs_version
+
+- name: Upgrade nodejs
+  block:
+    - name: Check if any nodejs processes are running
+      shell: pgrep nodejs > /dev/null 2>&1
+      register: pgrep_nodejs
+      failed_when: pgrep_nodejs.rc >= 2
+      changed_when: false
+
+    - name: Stop all nodejs processes
+      command: killall nodejs -q
+      args:
+        warn: false
+      when: pgrep_nodejs.rc == 0
+
+    - name: Setup nodejs apt repository
+      shell: curl -sL https://deb.nodesource.com/setup_{{ magicmirror_nodejs_stable_branch }} | bash -
+      args:
+        creates: /etc/apt/sources.list.d/nodesource.list
+      register: apt_repository
+
+    - name: Upgrade nodejs package
+      apt:
+        name: nodejs
+        state: latest
+
+  when: magicmirror_nodejs_upgrade_needed
+  become: yes
+
+- name: Clone MagicMirror repository
+  git:
+    repo: https://github.com/MichMich/MagicMirror.git
+    dest: "{{ magicmirror_src_dir }}/MagicMirror"
+    depth: 1
+    update: no
+    ssh_opts: -o StrictHostKeyChecking=no
+    accept_hostkey: yes
+  register: magicmirror_git
+
+- name: Install MagicMirror npm dependencies
+  command: npm install
+  args:
+    chdir: "{{ magicmirror_src_dir }}/MagicMirror"
+    warn: false
+  async: 1200
+  poll: 5
+  when: magicmirror_git.changed
+
+- name: Clone 3rd party modules
+  git:
+    repo: "{{ item.url }}"
+    dest: "{{ magicmirror_src_dir }}/MagicMirror/modules/{{ item.name }}"
+    version: "{{ item.version | default('HEAD', true) }}"
+    update: yes
+    force: yes
+    ssh_opts: -o StrictHostKeyChecking=no
+    accept_hostkey: yes
+  loop: "{{ magicmirror_extra_modules }}"
+  loop_control:
+    label: "{{ item.name }}"
+  register: third_party_modules
+  notify: restart mm
+
+
