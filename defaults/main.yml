@@ -83,6 +83,10 @@ magicmirror_compliments_file:
 #     npm_install: yes
 #     extra_cmd:
 magicmirror_extra_modules:
+   - name: MMM-ModInstall
+     url: 'https://gitlab.com/khassel/MMM-ModInstall.git'
+     npm_install: yes
+     extra_cmd:
 
 # Whether to add watchdog module in config
 magicmirror_watchdog_enabled: true

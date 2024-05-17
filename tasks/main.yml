@@ -27,121 +27,31 @@
     - { src: compliments.json.j2, dest: modules/default/compliments/compliments.json }
   notify: restart mm
 
-- name: Tasks requiring account escalation
-  block:
-    - name: Verify plymouth theme directory exists
-      file:
-        path: "{{ magicmirror_plymouth_theme_dir }}"
-        state: directory
+- name: "Configure plymouth boot animation"
+  import_tasks: configure-plymouth.yml
 
-    - name: Check if plymouth theme installed
-      stat:
-        path: "{{ magicmirror_plymouth_theme_dir }}/MagicMirror.plymouth"
-      register: plymouth_stat
+//------- pm2 stuff
+  - name: Install pm2 node.js package globally
+    npm:
+      name: pm2
+      global: yes
+      state: present
+    register: pm2_install
 
-    - name: Install plymouth theme
-      command: cp -n {{ magicmirror_src_dir }}/MagicMirror/splashscreen/{{ item }} {{ magicmirror_plymouth_theme_dir }}/
-      args:
-        warn: false
-      loop:
-        - splash.png
-        - MagicMirror.plymouth
-        - MagicMirror.script
-      register: plymouth_theme
-      when: plymouth_stat.stat is defined and plymouth_stat.stat.exists == false
+  - name: Configure pm2 startup
+    command: /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u {{ magicmirror_pm2_user }} --hp /home/{{ magicmirror_pm2_user }}
+    args:
+      warn: false
+    when: pm2_install.changed
+//-------
 
-    - name: Change plymouth default theme to MagicMirror
-      command: plymouth-set-default-theme -R MagicMirror
-      args:
-        warn: false
-      when: plymouth_theme.changed
+- name: "Quality of life for magicmirror on the host linux"
+  import_tasks: configure-linux-host.yml
 
-    - name: Install pm2 node.js package globally
-      npm:
-        name: pm2
-        global: yes
-        state: present
-      register: pm2_install
+- name: "Configure audio on the host linux"
+  import_tasks: configure-audio.yml
 
-    - name: Configure pm2 startup
-      command: /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u {{ magicmirror_pm2_user }} --hp /home/{{ magicmirror_pm2_user }}
-      args:
-        warn: false
-      when: pm2_install.changed
-
-    - name: Change autologin user to {{ magicmirror_pm2_user }} account
-      lineinfile:
-        path: "/etc/systemd/system/autologin@.service"
-        regexp: "ExecStart=-/sbin/agetty --autologin (?!{{ magicmirror_pm2_user }}\\s).* --noclear %I \\$TERM"
-        line: "ExecStart=-/sbin/agetty --autologin {{ magicmirror_pm2_user }} --noclear %I $TERM"
-        backrefs: yes
-        state: present
-      notify: reboot no wait
-
-    - name: Set lightdm autologin user to {{ magicmirror_pm2_user }} account
-      lineinfile:
-        path: /etc/lightdm/lightdm.conf
-        regexp: "autologin-user=(?!{{ magicmirror_pm2_user }}$)"
-        line: "autologin-user={{ magicmirror_pm2_user }}"
-        backrefs: yes
-        state: present
-      notify: reboot no wait
-
-    - name: Disable lightdm screen saver
-      lineinfile:
-        path: /etc/lightdm/lightdm.conf
-        line: 'xserver-command=X -s 0 -dpms'
-        insertafter: '[Seat:*]'
-        state: present
-      notify: reboot no wait
-
-    - name: Enable OpenGL driver
-      lineinfile:
-        path: /boot/config.txt
-        line: 'dtoverlay=vc4-kms-v3d'
-        state: present
-      notify: reboot no wait
-
-    - name: Check current sound output device
-      command: 'amixer cget numid=3'
-      changed_when: false
-      register: device_output
-
-    - name: Enable Headphone jack sound output
-      command: "amixer cset numid=3 {{ magicmirror_audio_output_device }}"
-      when: device_output.stdout is defined and device_output.stdout is not search("values=" ~ magicmirror_audio_output_device ~ ",")
-
-    - name: Set global default audio input device
-      template: src=asoundrc.j2 dest=/etc/asound.conf
-
-    - name: Install pip module pyaudio
-      pip:
-        name: pyaudio
-        state: present
-
-  become: yes
-
-- name: Set user default audio input device
-  template: src=asoundrc.j2 dest=/home/{{ magicmirror_pm2_user }}/.asoundrc
-
-- name: Setup autohiding mouse
-  lineinfile:
-    path: /home/{{ magicmirror_pm2_user }}/.config/lxsession/LXDE-pi/autostart
-    line: '@unclutter -display :0 -idle 3 -root -noevents'
-    state: present
-  notify: reboot no wait
-
-- name: Disable screen saver
-  lineinfile:
-    path: /home/{{ magicmirror_pm2_user }}/.config/lxsession/LXDE-pi/autostart
-    line: "{{ item }}"
-    state: present
-  loop:
-    - '@xset s noblank'
-    - '@xset s off'
-    - '@xset -dpms'
-  notify: reboot no wait
-
+//------- pm2 stuff
 - name: Install pm2 control files
   template:
     src: "{{ item.src }}"
@@ -161,3 +71,4 @@
     - pm2 startOrRestart {{ magicmirror_src_dir }}/MagicMirror_pm2/pm2_MagicMirror.json
     - pm2 save
   when: pm2_control.changed
+//-------

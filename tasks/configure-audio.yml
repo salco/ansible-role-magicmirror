@@ -1,0 +1,23 @@
+---
+  - name: Tasks requiring account escalation
+    block:
+      - name: Check current sound output device
+        command: 'amixer cget numid=3'
+        changed_when: false
+        register: device_output
+
+      - name: Enable Headphone jack sound output
+        command: "amixer cset numid=3 {{ magicmirror_audio_output_device }}"
+        when: device_output.stdout is defined and device_output.stdout is not search("values=" ~ magicmirror_audio_output_device ~ ",")
+
+      - name: Set global default audio input device
+        template: src=asoundrc.j2 dest=/etc/asound.conf
+
+      - name: Install pip module pyaudio
+        pip:
+          name: pyaudio
+          state: present
+    become: yes
+
+  - name: Set user default audio input device
+    template: src=asoundrc.j2 dest=/home/{{ magicmirror_pm2_user }}/.asoundrc

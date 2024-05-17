@@ -1,0 +1,30 @@
+---
+- name: Tasks requiring account escalation
+  block:
+    - name: Verify plymouth theme directory exists
+      file:
+        path: "{{ magicmirror_plymouth_theme_dir }}"
+        state: directory
+
+    - name: Check if plymouth theme installed
+      stat:
+        path: "{{ magicmirror_plymouth_theme_dir }}/MagicMirror.plymouth"
+      register: plymouth_stat
+
+    - name: Install plymouth theme
+      command: cp -n {{ magicmirror_src_dir }}/MagicMirror/splashscreen/{{ item }} {{ magicmirror_plymouth_theme_dir }}/
+      args:
+        warn: false
+      loop:
+        - splash.png
+        - MagicMirror.plymouth
+        - MagicMirror.script
+      register: plymouth_theme
+      when: plymouth_stat.stat is defined and plymouth_stat.stat.exists == false
+
+    - name: Change plymouth default theme to MagicMirror
+      command: plymouth-set-default-theme -R MagicMirror
+      args:
+        warn: false
+      when: plymouth_theme.changed
+  become: yes

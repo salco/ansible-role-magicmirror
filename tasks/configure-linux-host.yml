@@ -1,0 +1,55 @@
+---
+- name: Tasks requiring account escalation
+  block:
+  - name: Change autologin user to {{ magicmirror_pm2_user }} account
+    lineinfile:
+      path: "/etc/systemd/system/autologin@.service"
+      regexp: "ExecStart=-/sbin/agetty --autologin (?!{{ magicmirror_pm2_user }}\\s).* --noclear %I \\$TERM"
+      line: "ExecStart=-/sbin/agetty --autologin {{ magicmirror_pm2_user }} --noclear %I $TERM"
+      backrefs: yes
+      state: present
+    notify: reboot no wait
+
+  - name: Set lightdm autologin user to {{ magicmirror_pm2_user }} account
+    lineinfile:
+      path: /etc/lightdm/lightdm.conf
+      regexp: "autologin-user=(?!{{ magicmirror_pm2_user }}$)"
+      line: "autologin-user={{ magicmirror_pm2_user }}"
+      backrefs: yes
+      state: present
+    notify: reboot no wait
+
+  - name: Disable lightdm screen saver
+    lineinfile:
+      path: /etc/lightdm/lightdm.conf
+      line: 'xserver-command=X -s 0 -dpms'
+      insertafter: '[Seat:*]'
+      state: present
+    notify: reboot no wait
+
+  - name: Enable OpenGL driver
+    lineinfile:
+      path: /boot/config.txt
+      line: 'dtoverlay=vc4-kms-v3d'
+      state: present
+    notify: reboot no wait
+    when: ansible_facts['ansible_lsb.id'] == 'Raspbian'
+  become: yes
+
+- name: Setup autohiding mouse
+  lineinfile:
+    path: /home/{{ magicmirror_pm2_user }}/.config/lxsession/LXDE-pi/autostart
+    line: '@unclutter -display :0 -idle 3 -root -noevents'
+    state: present
+  notify: reboot no wait
+
+- name: Disable screen saver
+  lineinfile:
+    path: /home/{{ magicmirror_pm2_user }}/.config/lxsession/LXDE-pi/autostart
+    line: "{{ item }}"
+    state: present
+  loop:
+    - '@xset s noblank'
+    - '@xset s off'
+    - '@xset -dpms'
+  notify: reboot no wait
