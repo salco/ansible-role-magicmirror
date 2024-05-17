@@ -2,23 +2,8 @@
 - name: "prepare deployment"
   import_tasks: setup-deployment.yml
 
-- name: Run npm install for 3rd party modules
-  command: 'npm install --only=prod'
-  args:
-    chdir: "{{ item.invocation.module_args.dest }}"
-  loop: "{{ third_party_modules.results }}"
-  loop_control:
-    label: "{{ item.item.name }}"
-  when: item.changed and item.item.npm_install
-
-- name: Run extra commands for 3rd party modules
-  command: "{{ item.item.extra_cmd }}"
-  args:
-    chdir: "{{ item.invocation.module_args.dest }}"
-  loop: "{{ third_party_modules.results }}"
-  loop_control:
-    label: "{{ item.item.name }}"
-  when: item.changed and item.item.extra_cmd is defined and item.item.extra_cmd != ""
+- name: "Setup modules"
+  import_tasks: setup-modules.yml
 
 - name: Install MagicMirror config files
   template: src="{{ item.src }}" dest="{{ magicmirror_src_dir }}/MagicMirror/{{ item.dest }}"
