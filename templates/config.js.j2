@@ -167,11 +167,11 @@ var config = {
             header: "{{ _modules['header'] }}",
             {%- endif %}
 
-{% if _modules['position'] is defined %}
+            {% if _modules['position'] is defined -%}
             position: "{{ _modules['position'] }}",
-{% endif -%}
+            {%- endif %}
 
-            {% if _modules['config'] is defined %}
+            {% if _modules['config'] is defined -%}
             config: {
                 {{ _modules['config']|indent(16, false) }}
             },
