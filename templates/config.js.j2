@@ -36,6 +36,15 @@ var config = {
             {% if _modules['position'] is defined -%}
             position: "{{ _modules['position'] }}",
             {%- endif %}
+            {% if _modules['classes'] is defined -%}
+            classes: "{{ _modules['classes'] }}",
+            {%- endif +%}
+            {% if _modules['animateIn'] is defined -%}
+            classes: "{{ _modules['animateIn'] }}",
+            {%- endif +%}
+            {% if _modules['animateOut'] is defined -%}
+            classes: "{{ _modules['animateOut'] }}",
+            {%- endif +%}
             {% if _modules['config'] is defined -%}
             config: {
                 {{ _modules['config']|indent(16, false) }}
