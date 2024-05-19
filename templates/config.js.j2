@@ -159,8 +159,8 @@ var config = {
                 showPublishDate: true
             }
         },
-        {%- for modules in magicmirror_extra_modules %}
-        {%-  set _modules = magicmirror_extra_modules[modules] %}
+        {% for modules in magicmirror_extra_modules -%}
+        {%  set _modules = magicmirror_extra_modules[modules] -%}
         {
             module: "{{ _modules['name'] }}",
             {%- if _modules['header'] is defined %}
@@ -173,12 +173,11 @@ var config = {
 
             {% if _modules['config'] is defined %}
             config: {
-{{ _modules['config']|indent(8, true) }}
-              {#TODO look if it need to be rework on config depth#}
+                {{ _modules['config']|indent(16, false) }}
             },
-            {%- endif %}
+            {%- endif +%}
         },
-        {%- endfor %}
+      {% endfor -%}
     ]
 
 };
