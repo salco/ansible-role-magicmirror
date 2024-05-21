@@ -35,9 +35,11 @@
 
 - name: "Quality of life for magicmirror on the host linux"
   import_tasks: configure-linux-host.yml
+  when: use_qol |bool
 
 - name: "Configure audio on the host linux"
   import_tasks: configure-audio.yml
+  when: use_audiocfg |bool
 
 //------- pm2 stuff
 - name: Install pm2 control files
