@@ -29,88 +29,30 @@ pip modules required. They are listed here for completeness, there is no manual 
 
 ## Role Variables
 
-Dependent apt packages that will be installed (default list)
-
-    magicmirror_apt_packages:
-        - curl
-        - wget
-        - git
-        - build-essential
-        - unzip
-        - unclutter
-        - x11-xserver-utils
-        # alexa related
-        - sox
-        - libsox-fmt-all
-        - swig3.0
-        - python-pyaudio
-        - python3-pyaudio
-        - libatlas-base-dev
-        # end alexa related
-
-Audio output device, valid options are -  0: Automatic, 1: Analogue (headphone jack), 2: HDMI
-
-    magicmirror_audio_output_device: 0
-
-Audio capture device
-
-    magicmirror_audio_capture_device: 'hw:1,0'
-
-User account to use pm2 with
-
-    magicmirror_pm2_user: pi
-
-Parent directory to checkout MagicMirror repository
-
-    magicmirror_src_dir: /home/{{ magicmirror_pm2_user }}/src
-
-Minimal nodejs version string
-
-    magicmirror_min_nodejs_version: v5.1.0
-
-Stable branch name for nodejs installer
-
-    magicmirror_nodejs_stable_branch: 9.x
-
-Used internally in role to set whether nodejs needs to be upgraded
-
-    magicmirror_nodejs_upgrade_needed: no
-
-Path to plymouth themes directory for MagicMirror
-
-    magicmirror_plymouth_theme_dir: /usr/share/plymouth/themes/MagicMirror
-
-12 or 24 hr time format
-
-    magicmirror_timeformat: 12
-
-imperial or metric units
-
-    magicmirror_units: imperial
-
-List of third party modules clone url's, example syntax
-
-```
-  - name: MMM-connection-status
-    url: 'https://github.com/sheyabernstein/MMM-connection-status.git'
-    npm_install: yes
-    extra_cmd:
-```
-
 ### Quality of life
 * autologin
 * disable screen saver
 * hide mouse
-
 
 | Name | Description | Default value |
 | -- | -- | -- |
 | `use_plymouth` | Bool used to determine if you want plymounth splashscreen from magicmirror | `false` |
 | `use_qol`| Bool used to get all the quality of life improvement | `false` |
 | `use_audiocfg`| Bool used to setup audio on target | `false` |
-
+| `magicmirror_units` | can be `imperial` or `metric` | `metric` |
+| `magicmirror_nodejs_stable_branch` | Stable branch name for nodejs installer | `20.x` |
+| `magicmirror_min_nodejs_version` | Minimal nodejs version string | `v17.7.2` |
+| `magicmirror_pm2_user` | User account to use pm2 with | `{{ ansible_user_id }}` |
+| `magicmirror_src_dir` | Parent directory to checkout MagicMirror repository | `{{ ansible_env.HOME }}/src` |
+| `magicmirror_timeformat` | The form of time notation that will be used. Possible values are `12` or `24`. | `24` |
+| `magicmirror_plymouth_theme_dir` | Path to plymouth themes directory for MagicMirror | `/usr/share/plymouth/themes/MagicMirror` |
+| `magicmirror_apt_packages` | Dependent apt packages that will be installed (default list) | curl, wget, git, build-essential, unzip, unclutter, x11-xserver-utils |
+| `magicmirror_audio_output_device` | Audio output device, valid options are -  `0`: Automatic, `1`: Analogue (headphone jack), `2`: HDMI | `0` |
+| `magicmirror_audio_capture_device` | Audio capture device | 'hw:1,0' |
 
 ## Other option
+> *INFO* need to be move later: List of third party modules clone url's, example syntax
+
 An example to help the description below.
 ```.yml
 magicmirror_extra_modules:

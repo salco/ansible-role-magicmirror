@@ -35,11 +35,11 @@
 
 - name: "Quality of life for magicmirror on the host linux"
   import_tasks: configure-linux-host.yml
-  when: use_qol |bool
+  when: ( use_qol |bool ) and ( ansible_facts['ansible_system'] == 'Linux' )
 
 - name: "Configure audio on the host linux"
   import_tasks: configure-audio.yml
-  when: use_audiocfg |bool
+  when: ( use_audiocfg |bool ) and ( ansible_facts['ansible_system'] == 'Linux' )
 
 //------- pm2 stuff
 - name: Install pm2 control files

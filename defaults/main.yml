@@ -8,49 +8,17 @@ magicmirror_apt_packages:
   - unzip
   - unclutter
   - x11-xserver-utils
-  # alexa related
-  - sox
-  - libsox-fmt-all
-  - swig3.0
-  - python-pyaudio
-  - python3-pyaudio
-  - libatlas-base-dev
-  # end alexa related
 
-# Audio output device, options- 0:automatic 2:hdmi 1:analogue (headphone jack)
 magicmirror_audio_output_device: 0
-
-# Audio capture device
 magicmirror_audio_capture_device: 'hw:1,0'
-
-# User account to use pm2 with
-magicmirror_pm2_user: pi
-
-# Parent directory to checkout MagicMirror repository
-magicmirror_src_dir: /home/{{ magicmirror_pm2_user }}/src
-
-# Minimal nodejs version string
-magicmirror_min_nodejs_version: v5.1.0
-
-# Stable branch name for nodejs installer
-magicmirror_nodejs_stable_branch: 9.x
-
-# Used internally in role to set whether nodejs needs to be upgraded
-magicmirror_nodejs_upgrade_needed: no
-
-# Path to plymouth themes directory for MagicMirror
+magicmirror_pm2_user: {{ ansible_user_id }}
+magicmirror_src_dir: {{ ansible_env.HOME }}/src
+magicmirror_min_nodejs_version: v17.7.2
+magicmirror_nodejs_stable_branch: 20.x
 magicmirror_plymouth_theme_dir: /usr/share/plymouth/themes/MagicMirror
-
-# 12 or 24 hr time format
-magicmirror_timeformat: 12
-
-# imperial or metric units
-magicmirror_units: imperial
-
-magicmirror_extra_modules:
-
+magicmirror_timeformat: 24
+magicmirror_units: metric
 use_plymouth: false
-
 use_qol: false
-
 use_audiocfg: false
+magicmirror_extra_modules:
