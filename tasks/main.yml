@@ -16,6 +16,7 @@
 
 - name: "Configure plymouth boot animation"
   import_tasks: configure-plymouth.yml
+  when: use_plymouth |bool
 
 //------- pm2 stuff
   - name: Install pm2 node.js package globally

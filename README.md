@@ -96,6 +96,10 @@ List of third party modules clone url's, example syntax
     npm_install: yes
     extra_cmd:
 ```
+| Name | Description | Default value |
+| -- | -- | -- |
+| `use_plymouth` | Bool used to determin if you whant plymounth splashscreen from magicmirror | `false` |
+
 
 
 ## Other option
