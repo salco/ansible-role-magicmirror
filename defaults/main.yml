@@ -48,3 +48,9 @@ magicmirror_timeformat: 12
 magicmirror_units: imperial
 
 magicmirror_extra_modules:
+
+use_plymouth: false
+
+use_qol: false
+
+use_audiocfg: false

@@ -97,6 +97,18 @@ List of third party modules clone url's, example syntax
     extra_cmd:
 ```
 
+### Quality of life
+* autologin
+* disable screen saver
+* hide mouse
+
+
+| Name | Description | Default value |
+| -- | -- | -- |
+| `use_plymouth` | Bool used to determine if you want plymounth splashscreen from magicmirror | `false` |
+| `use_qol`| Bool used to get all the quality of life improvement | `false` |
+| `use_audiocfg`| Bool used to setup audio on target | `false` |
+
 
 ## Other option
 An example to help the description below.

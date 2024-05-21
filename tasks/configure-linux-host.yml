@@ -41,6 +41,7 @@
     path: /home/{{ magicmirror_pm2_user }}/.config/lxsession/LXDE-pi/autostart
     line: '@unclutter -display :0 -idle 3 -root -noevents'
     state: present
+  when: ansible_facts['ansible_lsb.id'] == 'Raspbian'
   notify: reboot no wait
 
 - name: Disable screen saver
