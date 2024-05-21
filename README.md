@@ -88,44 +88,6 @@ imperial or metric units
 
     magicmirror_units: imperial
 
-Default timezone
-
-    magicmirror_timezone: America/New_York
-
-API key from http://www.openweathermap.org
-
-    magicmirror_weather_api_key:
-
-Header for calendar module
-
-    magicmirror_calendar_header: US Holidays
-
-Calendar module 'location' value
-
-    magicmirror_weather_location: Boston
-
-ID from http://www.openweathermap.org/help/city_list.txt
-
-    magicmirror_weather_locationid:
-
-List of newsfeeds
-
-    magicmirror_newsfeeds:
-    - { title: New York Times, url: "http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml" }
-
-Hide private events
-
-    magicmirror_calendar_hideprivate: false
-
-List of calendars
-
-    magicmirror_calendars:
-    - { symbol: "calendar-check-o ", url: "webcal://www.calendarlabs.com/templates/ical/US-Holidays.ics" }
-
-External json file for compliments module
-
-    magicmirror_compliments_file:
-
 List of third party modules clone url's, example syntax
 
 ```
@@ -134,107 +96,8 @@ List of third party modules clone url's, example syntax
     npm_install: yes
     extra_cmd:
 ```
-    magicmirror_extra_modules:
 
-Whether to add watchdog module in config
 
-    magicmirror_watchdog_enabled: true
-
-Name of pm2 app to restart on failure
-
-    magicmirror_watchdog_pm2_app: 'MagicMirror'
-
-Whether to add systemstats module in config
-
-    magicmirror_systemstats_enabled: true
-
-Header for SystemStats module
-
-    magicmirror_systemstats_header: System Stats
-
-Update Interval in ms, defaults to 10s
-
-    magicmirror_systemstats_updateinterval: 10000
-
-Whether to add MyCommute module in config
-
-    magicmirror_mycommute_enabled: false
-
-Header for mycommute module
-
-    magicmirror_mycommute_header: Traffic
-
-Google API key, https://developers.google.com/maps/documentation/javascript/get-api-key
-
-    magicmirror_mycommute_api_key:
-
-Starting address (home)
-
-    magicmirror_mycommute_origin:
-
-Start time when module will be visible (24-hr format, defaults to midnight)
-
-    magicmirror_mycommute_starttime: '00:00'
-
-End time when module will be visible (24hr format, defaults to one minute before midnight)
-
-    magicmirror_mycommute_endtime: '23:59'
-
-Array of days to hide module. Valid numbers are 0 through 6, 0 = Sunday, 6 = Saturday. i.e. [0,6] hides on the weekend.
-
-    magicmirror_mycommute_hidedays:
-
-Format of total travel time
-
-    magicmirror_mycommute_traveltimeformat: m [min]
-
-How often to poll for traffic updates in milliseconds. Defaults to 10 minutes (10 * 60 * 1000)
-
-    magicmirror_mycommute_pollfrequency: 600000
-
-Array of destinations
-
-    magicmirror_mycommute_destinations:
-
-Whether to add alexa module in config
-
-    magicmirror_alexa_enabled: false
-
-Alexa AVS client id
-
-    magicmirror_alexa_clientid:
-
-Alexa AVS client secret
-
-    magicmirror_alexa_clientsecret:
-
-Alexa AVS device id
-
-    magicmirror_alexa_deviceid:
-
-Alexa AVS refresh token
-
-    magicmirror_alexa_refreshtoken:
-
-Alexa AVS wake word
-
-    magicmirror_alexa_wakeword: Smart Mirror
-
-Whether to add the PIR sensor module in config
-
-    magicmirror_pirsensor_enabled: false
-
-BCM pin number sensor's digital out is connected to
-
-    magicmirror_pirsensor_pin: 22
-
-Turn off HDMI port when no motion?
-
-    magicmirror_pirsensor_powersaving: true
-
-Delay befor turning off HDMI port in seconds
-
-    magicmirror_pirsensor_powersaving_delay: 10
 ## Other option
 An example to help the description below.
 ```.yml
@@ -259,6 +122,7 @@ Here is the list of all option you can define under "_<your_unique_key_name>_":
 | Name | Description | Optional |
 | -- | -- | -- |
 | `name` | The module name |  |
+| `url` |  TBD | |
 | *`header`* | To display a header text above the module, add the header property. | __yes__ |
 | *`position`* | The location of the module in which the module will be loaded. Possible values are `top_bar`, `top_left`, `top_center`, `top_right`, `upper_third`, `middle_center`, `lower_third`, `bottom_left`, `bottom_center`, `bottom_right`, `bottom_bar`, `fullscreen_above`, and `fullscreen_below` | __yes__ |
 | *`animateIn`* | Special animate name when a module appears. See: [this site](https://animate.style/)  | __yes__ |
