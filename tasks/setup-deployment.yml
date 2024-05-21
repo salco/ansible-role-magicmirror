@@ -1,7 +1,7 @@
 ---
 - name: Install dependent packages
   become: yes
-  apt:
+  package:
     name: "{{ magicmirror_apt_packages }}"
     state: present
   when: magicmirror_apt_packages is defined
