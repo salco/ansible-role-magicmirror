@@ -1,18 +1,19 @@
 ---
 - name: Clone 3rd party modules
   git:
-    repo: "{{ item.url }}"
-    dest: "{{ magicmirror_src_dir }}/MagicMirror/modules/{{ item.name }}"
-    version: "{{ item.version | default('HEAD', true) }}"
+    repo: "{{ item.value.url }}"
+    dest: "{{ magicmirror_src_dir }}/MagicMirror/modules/{{ item.value.name }}"
+    version: "{{ item.value.version | default('HEAD', true) }}"
     update: yes
     force: yes
     ssh_opts: -o StrictHostKeyChecking=no
     accept_hostkey: yes
-  loop: "{{ magicmirror_extra_modules }}"
+  loop: "{{ magicmirror_extra_modules | dict2items }}"
   loop_control:
-    label: "{{ item.name }}"
+    label: "{{ item.value.name }}"
   register: third_party_modules
   notify: restart mm
+
 - name: Run npm install for 3rd party modules
   command: 'npm install --only=prod'
   args:
