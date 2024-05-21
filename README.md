@@ -49,6 +49,10 @@ pip modules required. They are listed here for completeness, there is no manual 
 | `magicmirror_apt_packages` | Dependent apt packages that will be installed (default list) | curl, wget, git, build-essential, unzip, unclutter, x11-xserver-utils |
 | `magicmirror_audio_output_device` | Audio output device, valid options are -  `0`: Automatic, `1`: Analogue (headphone jack), `2`: HDMI | `0` |
 | `magicmirror_audio_capture_device` | Audio capture device | 'hw:1,0' |
+| `magicmirror_address` | Address to listen on | `localhost` |
+| `magicmirror_port` | Port to listen on | `8080` |
+| `magicmirror_ipWhitelist` | The list of IPs from which you are allowed to access the MagicMirror² | "127.0.0.1","::ffff:127.0.0.1","::1" |
+| `magicmirror_language` | The language of the interface. | `en` |
 
 ## Other option
 > *INFO* need to be move later: List of third party modules clone url's, example syntax

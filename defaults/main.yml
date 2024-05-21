@@ -21,4 +21,13 @@ magicmirror_units: metric
 use_plymouth: false
 use_qol: false
 use_audiocfg: false
+magicmirror_address: "localhost"
+magicmirror_port: "8080"
+magicmirror_ipWhitelist:
+  - "127.0.0.1"
+  - "::ffff:127.0.0.1"
+  - "::1"
 magicmirror_extra_modules:
+magicmirror_language: "en"
+magicmirror_logLevel:
+  - "ERROR"
