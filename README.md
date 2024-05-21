@@ -235,7 +235,35 @@ Turn off HDMI port when no motion?
 Delay befor turning off HDMI port in seconds
 
     magicmirror_pirsensor_powersaving_delay: 10
+## Other option
+An example to help the description below.
+```.yml
+magicmirror_extra_modules:
+  My-SystemStats:
+    name: 'MMM-SystemStats'
+    position: 'bottom_right'
+    classes: 'small dimmed'
+    header: "System Stats"
+    config: |
+      updateInterval: 10000,
+      animationSpeed: 0,
+      align: 'right',
+      thresholdCPUTemp: 167
+```
 
+- `magicmirror_extra_modules` : The list of all modules you want to deploy
+  - _<your_unique_key_name>_ : an unique name it's use to address sub-variables during itteration in [config.js](templates/config.js.j2)
+
+Here is the list of all option you can define under "_<your_unique_key_name>_":
+
+| Name | Description | Optional |
+| -- | -- | -- |
+| `name` | The module name |  |
+| *`header`* | To display a header text above the module, add the header property. | __yes__ |
+| *`position`* | The location of the module in which the module will be loaded. Possible values are `top_bar`, `top_left`, `top_center`, `top_right`, `upper_third`, `middle_center`, `lower_third`, `bottom_left`, `bottom_center`, `bottom_right`, `bottom_bar`, `fullscreen_above`, and `fullscreen_below` | __yes__ |
+| *`animateIn`* | Special animate name when a module appears. See: [this site](https://animate.style/)  | __yes__ |
+| *`animateOut`* | Special animate name when a module should hide. See: [this site](https://animate.style/)  | __yes__ |
+| *`config`* | An object with the module configuration properties. Check the documentation of the module for more information.  | __yes__ |
 
 ## Dependencies
 
