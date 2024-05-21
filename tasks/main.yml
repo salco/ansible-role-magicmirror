@@ -6,7 +6,9 @@
   import_tasks: setup-modules.yml
 
 - name: Install MagicMirror config files
-  template: src="{{ item.src }}" dest="{{ magicmirror_src_dir }}/MagicMirror/{{ item.dest }}"
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ magicmirror_src_dir }}/MagicMirror/{{ item.dest }}"
   loop:
     - { src: config.js.j2, dest: config/config.js }
     - { src: compliments.json.j2, dest: modules/default/compliments/compliments.json }

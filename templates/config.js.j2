@@ -26,139 +26,32 @@ var config = {
     units: "{{ magicmirror_units }}",
 
     modules: [
+        {% for modules in magicmirror_extra_modules -%}
+        {%  set _modules = magicmirror_extra_modules[modules] -%}
         {
-            module: "alert"
-        },
-        {
-            module: "updatenotification",
-            position: "top_bar"
-        },
-{% if magicmirror_watchdog_enabled %}
-        {
-            module: 'MMM-WatchDog',
+            module: "{{ _modules['name'] }}",
+            {% if _modules['header'] is defined -%}
+            header: "{{ _modules['header'] }}",
+            {%- endif +%}
+            {% if _modules['position'] is defined -%}
+            position: "{{ _modules['position'] }}",
+            {%- endif +%}
+            {% if _modules['classes'] is defined -%}
+            classes: "{{ _modules['classes'] }}",
+            {%- endif +%}
+            {% if _modules['animateIn'] is defined -%}
+            classes: "{{ _modules['animateIn'] }}",
+            {%- endif +%}
+            {% if _modules['animateOut'] is defined -%}
+            classes: "{{ _modules['animateOut'] }}",
+            {%- endif +%}
+            {% if _modules['config'] is defined -%}
             config: {
-                interval: 2,
-                timeout: 10,
-                pm2_app: "{{ magicmirror_watchdog_pm2_app }}"
-            }
-        },
-{% endif %}
-{% if magicmirror_pirsensor_enabled %}
-        {
-            module: 'MMM-PIR-Sensor',
-            config: {
-                sensorPIN: {{ magicmirror_pirsensor_pin }},
-                powerSaving: "{{ magicmirror_pirsensor_powersaving }}",
-                powerSavingDelay: {{ magicmirror_pirsensor_powersaving_delay | default(0, true) }},
-            }
-        },
-{% endif %}
-        {
-            module: "clock",
-            position: "top_left",
-            timezone: "{{ magicmirror_timezone }}"
-        },
-        {
-            module: "calendar",
-            header: "{{ magicmirror_calendar_header }}",
-            position: "top_left",
-            config: {
-                hidePrivate: "{{ magicmirror_calendar_hideprivate }}",
-                calendars: {{ magicmirror_calendars | to_nice_json }}
-            }
-        },
-{% if magicmirror_mycommute_enabled %}
-        {
-            module: 'MMM-MyCommute',
-            position: 'bottom_left',
-            header: "{{ magicmirror_mycommute_header }}",
-            classes: 'default everyone',
-            config: {
-                apikey: "{{ magicmirror_mycommute_api_key }}",
-                origin: "{{ magicmirror_mycommute_origin }}",
-                startTime: "{{ magicmirror_mycommute_starttime }}",
-                endTime: "{{ magicmirror_mycommute_endtime }}",
-                hideDays: {{ magicmirror_mycommute_hidedays | default('[]', true) }},
-                travelTimeFormat: "{{ magicmirror_mycommute_traveltimeformat }}",
-                pollFrequency: "{{ magicmirror_mycommute_pollfrequency }}",
-                destinations: {{ magicmirror_mycommute_destinations | to_nice_json }}
-            }
-        },
-{% endif %}
-        {
-            module: "compliments",
-            disabled: true,
-            position: "lower_third",
-            config: {
-                remoteFile: "{{ magicmirror_compliments_file }}"
-            }
-        },
-        {
-            module: "currentweather",
-            position: "top_right",
-            config: {
-                location: "{{ magicmirror_weather_location }}",
-                locationID: "{{ magicmirror_weather_locationid }}",  //ID from http://www.openweathermap.org/help/city_list.txt
-                appid: "{{ magicmirror_weather_api_key }}",
-                degreeLabel: true,
-                showHumidity: false
-            }
-        },
-        {
-            module: "weatherforecast",
-            position: "top_right",
-            header: "Weather Forecast",
-            config: {
-                location: "{{ magicmirror_weather_location }}",
-                locationID: "{{ magicmirror_weather_locationid }}",  //ID from http://www.openweathermap.org/help/city_list.txt
-                appid: "{{ magicmirror_weather_api_key }}"
-            }
-        },
-{% if magicmirror_systemstats_enabled %}
-        {
-            module: 'MMM-SystemStats',
-            position: 'bottom_right',
-            classes: 'small dimmed',
-            header: "{{ magicmirror_systemstats_header }}",
-            config: {
-                updateInterval: {{ magicmirror_systemstats_updateinterval }},
-                animationSpeed: 0,
-                align: 'right', // align labels
-                thresholdCPUTemp: 167
+                {{ _modules['config']|indent(16, false) }}
             },
+            {%- endif +%}
         },
-{% endif %}
-{% if magicmirror_alexa_enabled %}
-        {
-            module: "MMM-awesome-alexa",
-            position: "bottom_bar",
-            config: {
-                wakeWord: "{{ magicmirror_alexa_wakeword }}",
-                clientId: "{{ magicmirror_alexa_clientid }}",
-                clientSecret: "{{ magicmirror_alexa_clientsecret }}",
-                deviceId: "{{ magicmirror_alexa_deviceid }}",
-                refreshToken: "{{ magicmirror_alexa_refreshtoken }}",
-                lite: false,
-                isSpeechVisualizationEnabled: true
-            }
-        },
-{% endif %}
-        {
-            module: "newsfeed",
-            position: "bottom_bar",
-            config: {
-                feeds: [
-                    {% for item in magicmirror_newsfeeds %}
-                    {
-                        title: "{{ item.title }}",
-                        url: "{{ item.url }}"
-                    },
-                    {% endfor %}
-                ],
-                showSourceTitle: true,
-                showPublishDate: true
-            }
-        },
+      {% endfor -%}
     ]
 
 };
