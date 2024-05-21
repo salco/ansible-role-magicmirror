@@ -112,6 +112,11 @@ magicmirror_extra_modules:
       animationSpeed: 0,
       align: 'right',
       thresholdCPUTemp: 167
+  MMM-connection-status:
+    name: MMM-connection-status
+    url: 'https://github.com/sheyabernstein/MMM-connection-status.git'
+    npm_install: yes
+    extra_cmd: "echo 'some text'"
 ```
 
 - `magicmirror_extra_modules` : The list of all modules you want to deploy

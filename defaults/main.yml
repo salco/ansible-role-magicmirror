@@ -47,10 +47,4 @@ magicmirror_timeformat: 12
 # imperial or metric units
 magicmirror_units: imperial
 
-# List of third party modules clone url's, example syntax
-#
-#   - name: MMM-connection-status
-#     url: 'https://github.com/sheyabernstein/MMM-connection-status.git'
-#     npm_install: yes
-#     extra_cmd:
 magicmirror_extra_modules:
