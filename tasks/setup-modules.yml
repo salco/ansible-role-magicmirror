@@ -1,9 +1,17 @@
 ---
+- name: test
+  ansible.builtin.debug:
+    msg: "test: {{ item }}"
+  loop: "{{ magicmirror_extra_modules | dict2items }}"
+  when: item.url is defined
+  loop_control:
+    label: "{{ item.value }}"
+
 - name: Clone 3rd party modules
   git:
-    repo: "{{ item.value.url }}"
-    dest: "{{ magicmirror_src_dir }}/MagicMirror/modules/{{ item.value.name }}"
-    version: "{{ item.value.version | default('HEAD', true) }}"
+    repo: "{{ item.url }}"
+    dest: "{{ magicmirror_src_dir }}/MagicMirror/modules/{{ item.name }}"
+    version: "{{ item.version | default('HEAD', true) }}"
     update: yes
     force: yes
     ssh_opts: -o StrictHostKeyChecking=no
@@ -11,23 +19,24 @@
   loop: "{{ magicmirror_extra_modules | dict2items }}"
   loop_control:
     label: "{{ item.value.name }}"
+  when: item.url is defined
   register: third_party_modules
   notify: restart mm
 
 - name: Run npm install for 3rd party modules
   command: 'npm install --only=prod'
   args:
-    chdir: "{{ item.invocation.module_args.dest }}"
+    chdir: "{{ item.value.invocation.module_args.dest }}"
   loop: "{{ third_party_modules.results }}"
   loop_control:
-    label: "{{ item.item.name }}"
+    label: "{{ item.item.value.name }}"
   when: item.changed and item.item.npm_install
 
 - name: Run extra commands for 3rd party modules
   command: "{{ item.item.extra_cmd }}"
   args:
-    chdir: "{{ item.invocation.module_args.dest }}"
+    chdir: "{{ item.value.invocation.module_args.dest }}"
   loop: "{{ third_party_modules.results }}"
   loop_control:
-    label: "{{ item.item.name }}"
-  when: item.changed and item.item.extra_cmd is defined and item.item.extra_cmd != ""
+    label: "{{ item.item.value.name }}"
+  when: item.changed and item.item.value.extra_cmd is defined and item.item.value.extra_cmd != ""

@@ -1,2 +1,3 @@
 ---
 magicmirror_nodejs_upgrade_needed: no # Used internally in role to set whether nodejs needs to be upgraded
+magicmirror_watchdog_pm2_app: 'MagicMirror'

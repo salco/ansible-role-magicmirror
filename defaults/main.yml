@@ -11,8 +11,8 @@ magicmirror_apt_packages:
 
 magicmirror_audio_output_device: 0
 magicmirror_audio_capture_device: 'hw:1,0'
-magicmirror_pm2_user: {{ ansible_user_id }}
-magicmirror_src_dir: {{ ansible_env.HOME }}/src
+magicmirror_pm2_user: "{{ ansible_user_id }}"
+magicmirror_src_dir: "{{ ansible_env.HOME }}/src"
 magicmirror_min_nodejs_version: v17.7.2
 magicmirror_nodejs_stable_branch: 20.x
 magicmirror_plymouth_theme_dir: /usr/share/plymouth/themes/MagicMirror

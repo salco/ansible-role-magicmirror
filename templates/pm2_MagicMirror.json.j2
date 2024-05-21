@@ -1,6 +1,6 @@
 {
   "apps" : [{
-    "name"        : "MagicMirror",
+    "name"        : "{{ magicmirror_watchdog_pm2_app }}",
     "script"      : "{{ magicmirror_src_dir }}/MagicMirror_pm2/mm.sh",
     "watch"       : ["{{ magicmirror_src_dir }}/MagicMirror/config/config.js"]
   }]

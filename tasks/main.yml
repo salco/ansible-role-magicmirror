@@ -18,20 +18,20 @@
   import_tasks: configure-plymouth.yml
   when: use_plymouth |bool
 
-//------- pm2 stuff
-  - name: Install pm2 node.js package globally
-    npm:
-      name: pm2
-      global: yes
-      state: present
-    register: pm2_install
+#------- pm2 stuff
+- name: Install pm2 node.js package globally
+  npm:
+    name: pm2
+    global: yes
+    state: present
+  become: true
+  register: pm2_install
 
-  - name: Configure pm2 startup
-    command: /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u {{ magicmirror_pm2_user }} --hp /home/{{ magicmirror_pm2_user }}
-    args:
-      warn: false
-    when: pm2_install.changed
-//-------
+- name: Configure pm2 startup
+  command: /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u {{ magicmirror_pm2_user }} --hp /home/{{ magicmirror_pm2_user }}
+  ignore_errors: true
+  when: pm2_install.changed
+#-------
 
 - name: "Quality of life for magicmirror on the host linux"
   import_tasks: configure-linux-host.yml
@@ -41,7 +41,7 @@
   import_tasks: configure-audio.yml
   when: ( use_audiocfg |bool ) and ( ansible_facts['ansible_system'] == 'Linux' )
 
-//------- pm2 stuff
+#------- pm2 stuff
 - name: Install pm2 control files
   template:
     src: "{{ item.src }}"
@@ -53,12 +53,10 @@
 
 - name: Set pm2 auto startup of MagicMirror
   command: "{{ item }}"
-  args:
-    warn: false
   register: command_result
   failed_when: "'[ERROR]' in command_result.stderr"
   loop:
     - pm2 startOrRestart {{ magicmirror_src_dir }}/MagicMirror_pm2/pm2_MagicMirror.json
     - pm2 save
   when: pm2_control.changed
-//-------
+#-------

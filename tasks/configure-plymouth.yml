@@ -13,8 +13,6 @@
 
     - name: Install plymouth theme
       command: cp -n {{ magicmirror_src_dir }}/MagicMirror/splashscreen/{{ item }} {{ magicmirror_plymouth_theme_dir }}/
-      args:
-        warn: false
       loop:
         - splash.png
         - MagicMirror.plymouth
@@ -24,7 +22,5 @@
 
     - name: Change plymouth default theme to MagicMirror
       command: plymouth-set-default-theme -R MagicMirror
-      args:
-        warn: false
       when: plymouth_theme.changed
   become: yes

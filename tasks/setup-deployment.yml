@@ -35,8 +35,6 @@
 
     - name: Stop all nodejs processes
       command: killall nodejs -q
-      args:
-        warn: false
       when: pgrep_nodejs.rc == 0
 
     - name: Setup nodejs apt repository
@@ -55,7 +53,7 @@
 
 - name: Clone MagicMirror repository
   git:
-    repo: https://github.com/MichMich/MagicMirror.git
+    repo: https://github.com/MagicMirrorOrg/MagicMirror.git
     dest: "{{ magicmirror_src_dir }}/MagicMirror"
     depth: 1
     update: no
@@ -67,7 +65,4 @@
   command: npm install
   args:
     chdir: "{{ magicmirror_src_dir }}/MagicMirror"
-    warn: false
-  async: 1200
-  poll: 5
   when: magicmirror_git.changed
