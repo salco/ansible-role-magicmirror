@@ -1,6 +1,14 @@
 ---
 - name: Tasks requiring account escalation
   block:
+    - name: Make sure the plymouth package exist
+      package:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - plymouth
+        - plymouth-themes
+
     - name: Verify plymouth theme directory exists
       file:
         path: "{{ magicmirror_plymouth_theme_dir }}"
