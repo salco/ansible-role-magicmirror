@@ -19,8 +19,8 @@
   when: use_plymouth |bool
 
 #------- pm2 stuff
-- name: Install pm2 node.js package globally
-  npm:
+- name: "Install pm2 node.js package globally"
+  community.general.npm:
     name: pm2
     global: yes
     state: present
