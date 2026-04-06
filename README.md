@@ -53,6 +53,7 @@ pip modules required. They are listed here for completeness, there is no manual 
 | `magicmirror_port` | Port to listen on | `8080` |
 | `magicmirror_ipWhitelist` | The list of IPs from which you are allowed to access the MagicMirror² | "127.0.0.1","::ffff:127.0.0.1","::1" |
 | `magicmirror_language` | The language of the interface. | `en` |
+| `magicmirror_update` | If the repo should be updated | `false` |
 
 ## Other option
 > *INFO* need to be move later: List of third party modules clone url's, example syntax

@@ -56,7 +56,7 @@
     repo: https://github.com/MagicMirrorOrg/MagicMirror.git
     dest: "{{ magicmirror_src_dir }}/MagicMirror"
     depth: 1
-    update: no
+    update: "{{ magicmirror_update }}"
     ssh_opts: -o StrictHostKeyChecking=no
     accept_hostkey: yes
   register: magicmirror_git

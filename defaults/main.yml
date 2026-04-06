@@ -31,3 +31,5 @@ magicmirror_extra_modules:
 magicmirror_language: "en"
 magicmirror_logLevel:
   - "ERROR"
+magicmirror_update: false
+
